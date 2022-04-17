@@ -45,20 +45,22 @@ const styleitem = {
 const Dashboard = () => {
     const classes = useStyles()
     const array = data
-    const arrayFilter = useState([])
+    let arraytime: any[]
 
-    const array_data = data.map((item:any) => {
-        item.time_slots.map((ele:any) => {
-         return{
-            ...ele,
-            _id:uuidv4()
-         }
-        })
-        })
+    const array_data = data && data.map((item:any) => {
+        return {
+            ...item,
+            day:new Date(ele.start_time).toLocaleString('en-us', { weekday: 'long' })
+        }
+        // console.log("arraytime",arraytime.filter((el:any)=> el.day ))
     })
-
-    console.log('arrayFilter', arrayFilter)
-
+    // arraytime = array_data && array_data?.time_slots?.map((ele:any) => {
+    //     return {
+    //         ...ele,
+    //         _id:uuidv4(),
+    //     }
+    // })
+    
     return (
         <Box className={classes.styleScrean}>
             <Box className={classes.style} component='nav' aria-label='mailbox folders'>
@@ -71,10 +73,16 @@ const Dashboard = () => {
                                         <ListItemText primary={item.name} />
                                     </ListItem>
                                 </Box>
-                                {item.time_slots.map((ele:any) => (
+                                {arraytime.length > 0 && arraytime.map((ele:any) => (
                                     <>
+                                        <Box>
+                                            <ListItem button sx={styleitem}>
+                                            <ListItemText primary={ele.day} />
+                                        </ListItem>
+                                        </Box>
                                         <Box className={classes.stylebuttontermins}>
                                             <ListItem button sx={styleitem}>
+                                                {/* <ListItemText primary={new Date(ele.start_time).toLocaleString('en-us', {  weekday: 'long' })} /> */}
                                                 <ListItemText primary={new Date(ele.start_time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} />
                                                 <ListItemText primary={new Date(ele.end_time).toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true })} />
                                             </ListItem>
