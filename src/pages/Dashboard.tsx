@@ -3,6 +3,7 @@ import { Box, ListItem, ListItemText} from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/system'
 import data from '../data/time_slots.json'
+import { v4 as uuidv4 } from 'uuid'
 
 const useStyles = makeStyles((theme: Theme) => ({
     style: {
@@ -44,11 +45,15 @@ const styleitem = {
 const Dashboard = () => {
     const classes = useStyles()
     const array = data
-    let arrayFilter= useState([])
+    const arrayFilter = useState([])
 
     const array_data = data.map((item:any) => {
         item.time_slots.map((ele:any) => {
-            // arrayFilter.push(...ele)
+         return{
+            ...ele,
+            _id:uuidv4()
+         }
+        })
         })
     })
 
