@@ -6,7 +6,7 @@ import * as moment from 'moment'
 const { v4: uuidv4 } = require('uuid');
 import data from '../../data/time_slots.json'
 import has from '../../components/utils/has'
-
+import * as dayjs from 'dayjs'
 
 const Companies = () => {
     const [companies, setCompanies] = useState([])
@@ -20,13 +20,13 @@ const Companies = () => {
     }, [])
 
     useEffect(() => {
-        const allSlots = companies && companies.map((comp) => {
+        const allSlots = companies.map((comp) => {
             const slots = comp.time_slots.map((slot) => {
                 return {
                     ...slot,
-                    start_time: moment(slot.start_time).format('HH:mm'),
-                    end_time: moment(slot.end_time).format('HH:mm'),
-                    day: moment(slot.start_time).format('l'),
+                    start_time: dayjs(slot.start_time).format('HH:mm'),
+                    end_time: dayjs(slot.end_time).format('HH:mm'),
+                    day: dayjs(slot.start_time).format('M/D/YYYY'),
                     companyId: comp.id,
                     state: "enabled",
                     slotId: uuidv4()
@@ -39,8 +39,6 @@ const Companies = () => {
         setSlotsState(mergedSlots)
 
     }, [companies])
-
-
 
     useEffect(() => {
         const companiesFormatted = companies.map((company) => {
@@ -80,8 +78,8 @@ const Companies = () => {
 
             const joinedSortedArray = sortedByDate.map((el) => {
                 return {
-                    day: moment(el[0]).format('dddd'),
-                    date: moment(el[0]).format('L'),
+                    day: dayjs(el[0]).format('dddd'),
+                    date: dayjs(el[0]).format('L'),
                     slots: el[1]
                 }
             })
