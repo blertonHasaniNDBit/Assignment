@@ -1,11 +1,8 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 import Company from '../../components/Company/Company';
 import './Companies.css'
-import * as moment from 'moment'
 const { v4: uuidv4 } = require('uuid');
 import data from '../../data/time_slots.json'
-import has from '../../components/utils/has'
 import * as dayjs from 'dayjs'
 
 const Companies = () => {
@@ -48,6 +45,7 @@ const Companies = () => {
                 time_slots: filteredByCompany
             }
         })
+
         const formatedDate = companiesFormatted.map((company) => {
             const slots = company.time_slots.map((slot) => {
                 return {
@@ -58,8 +56,8 @@ const Companies = () => {
                 company: company.name,
                 slots
             }
-
         })
+        
         const groupedByDayArray = formatedDate.map((company) => {
             const GroupedByDayObj = {};
 
@@ -101,6 +99,7 @@ const Companies = () => {
                 || (element.end_time.toString() <= reserve.end_time.toString() && element.end_time.toString() > reserve.start_time.toString()))
                 && reserve.selectedDay == element.day
             )
+
             if (booleanRes && !slotIds.includes(element.slotId)) {
                 return {
                     ...element,
@@ -126,7 +125,7 @@ const Companies = () => {
 
     const handleClick = (start_time, end_time, selectedDay, companyId, slotId) => {
         setSlotIdState(slotId)
-        if (reservations.length === 0 || !reservations.some(el => el.selectedDay === selectedDay.toString() && el.companyId === companyId)) {
+        if (reservations.length === 0 || !reservations.some(el => el.companyId === companyId)) {
             setReservations([...reservations, {
                 start_time,
                 end_time,
@@ -138,9 +137,8 @@ const Companies = () => {
             const filteredSlots = reservations.filter((el) => el.slotId !== slotId)
             setReservations(filteredSlots)
         }
-
-
     }
+
     return (
         <div className='companiesContainer'>
             {
