@@ -3,6 +3,7 @@ import Company from '../../components/Company/Company';
 import './Companies.css'
 const { v4: uuidv4 } = require('uuid');
 import data from '../../data/time_slots.json'
+import has from '../../components/utils/has'
 import * as dayjs from 'dayjs'
 
 const Companies = () => {
@@ -42,7 +43,7 @@ const Companies = () => {
             const filteredByCompany = slotsState.filter((slot) => slot.companyId === company.id)
             return {
                 ...company,
-                time_slots: filteredByCompany
+                time_slots: filteredByCompany,
             }
         })
 
@@ -50,17 +51,19 @@ const Companies = () => {
             const slots = company.time_slots.map((slot) => {
                 return {
                     ...slot,
+                    companyId: company.id,
                 }
             })
             return {
                 company: company.name,
-                slots
+                slots,
+                companyId: company.id,
             }
         })
         
         const groupedByDayArray = formatedDate.map((company) => {
             const GroupedByDayObj = {};
-
+        
             company.slots.forEach(element => {
                 let dayKey = element.day;
                 if (!GroupedByDayObj[dayKey]) {
@@ -70,6 +73,7 @@ const Companies = () => {
                     ...element
                 });
             });
+
             const sortedByDate = Object.entries(GroupedByDayObj).sort(function (a, b) {
                 return new Date(a[0]) - new Date(b[0]);
             });
@@ -81,12 +85,14 @@ const Companies = () => {
                     slots: el[1]
                 }
             })
-
+          
             return {
                 days: joinedSortedArray,
-                companyName: company.company
+                companyName: company.company,
+                companyId: company.companyId,
             }
         })
+
         setCompaniesFormatted(groupedByDayArray)
 
     }, [slotsState])
@@ -117,7 +123,6 @@ const Companies = () => {
                     state: "enabled"
                 }
             }
-
         })
         setSlotsState(touchedSlots)
 
@@ -142,7 +147,7 @@ const Companies = () => {
     return (
         <div className='companiesContainer'>
             {
-                companiesFormatted.map((company) => <Company data={company} handleClick={handleClick} key={company.companyName} />)
+                has(companiesFormatted)&&companiesFormatted.map((company) => <Company data={company} handleClick={handleClick} key={company._id}  reservations={reservations}/>)
             }
         </div>
     );
